@@ -17,22 +17,25 @@ def getRandomNum():
 
 def randCalc(divided, divisor, precision):
     global done, answer, attempts, counter1, counter2
-    while done == False:
-        x = getRandomNum()
-        if round((float(divided) / x), 5) == round(float(divisor),5):
-            if round((float(divisor) * x), 5) == round(float(divided),5):
-                done = True
-                answer = x
-                attempts = (counter2*precision) + int(counter1)
+    if divisor == 0:
+        print("fuck you")    
+    else:
+        while done == False:
+            x = getRandomNum()
+            if round((float(divided) / x), 5) == round(float(divisor),5):
+                if round((float(divisor) * x), 5) == round(float(divided),5):
+                    done = True
+                    answer = x
+                    attempts = (counter2*precision) + int(counter1)
+                else:
+                    done = True
+                    print("python bad")
             else:
-                done = True
-                print("python bad")
-        else:
-            if counter1 == precision:
-                counter2 += 1
-                counter1 = 1
-            else:
-                counter1 += 1
+                if counter1 == precision:
+                    counter2 += 1
+                    counter1 = 1
+                else:
+                    counter1 += 1
 
 threads = []
 for i in range(40): # create threads
