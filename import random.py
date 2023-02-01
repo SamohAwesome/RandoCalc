@@ -1,5 +1,5 @@
 import random
-
+import threading
 
 done = False
 print('if the number does not divide it will go forever, have fun!')
@@ -7,31 +7,41 @@ divided = float(input('the number to be divided '))
 divisor = float(input('the number that divideds '))
 counter1 = int(1)
 counter2 = int(0)
-prescion = 100000
+precision = 100000
+answer = 0
+attempts = 0
+
 def getRandomNum():
-     x = random.randint(prescion, (divided*prescion))/prescion
+     x = random.randint(precision, int(divided*precision))/precision
      return x
 
-def randCalc(done, divided, divisor, counter1, counter2, prescion):
+def randCalc(divided, divisor, precision):
+    global done, answer, attempts, counter1, counter2
     while done == False:
         x = getRandomNum()
-        b = x
-        if round((float(divided) / b), 5) == round(float(divisor),5):
-            done = True
-            print(str(b))
-            print("this is the " + str((counter2*prescion) + int(counter1)) + "th attempt")
-            
+        if round((float(divided) / x), 5) == round(float(divisor),5):
+            if round((float(divisor) * x), 5) == round(float(divided),5):
+                done = True
+                answer = x
+                attempts = (counter2*precision) + int(counter1)
+            else:
+                done = True
+                print("python bad")
         else:
-            if counter1 == prescion:
+            if counter1 == precision:
                 counter2 += 1
-                print('its not ' + str(b))
-                print("this is the " + str((counter2*prescion)) + "th attempt")
                 counter1 = 1
             else:
                 counter1 += 1
 
-randCalc(done, divided, divisor, counter1, counter2, prescion)
+threads = []
+for i in range(40): # create threads
+    t = threading.Thread(target=randCalc, args=(divided, divisor, precision))
+    threads.append(t)
+    t.start()
 
+for t in threads:
+    t.join()
 
-
-
+print("the answer is " + str(answer))
+print("the total amount of attempt is " + str(attempts))
